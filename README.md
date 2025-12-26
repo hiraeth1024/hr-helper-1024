@@ -2,11 +2,53 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# HR Lucky & Group Pro
 
-This contains everything you need to run your app locally.
+A modern, efficient tool for HR professionals to manage personnel lists, conduct lucky draws, and automatically group people.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1ykFfwDb5UQSVRM6RooWYCOmxU-E-7gDS
+## Features
+- **Name Management**: Add, remove, and manage personnel lists.
+- **Lucky Draw**: Conduct exciting lucky draws with visual effects and sounds.
+- **Group Generator**: Automatically generate groups based on team size.
+
+## Tech Stack
+- React 18
+- Vite
+- Tailwind CSS
+- Canvas Confetti
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v18 or higher recommended)
+- npm
+
+### Installation
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Development
+Start the development server:
+```bash
+npm run dev
+```
+
+### Build
+Build for production:
+```bash
+npm run build
+```
+
+### Deployment
+This project is configured to deploy to GitHub Pages automatically via GitHub Actions.
+1. Push changes to `main` branch.
+2. The workflow will build and deploy the application.
+
+## License
+MIT
 
 ## Run Locally
 

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
+import confetti from 'canvas-confetti';
 import { Person, LuckyDrawConfig } from '../types';
 
 interface LuckyDrawProps {
@@ -11,7 +12,7 @@ export const LuckyDraw: React.FC<LuckyDrawProps> = ({ people }) => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [winners, setWinners] = useState<Person[]>([]);
   const [config, setConfig] = useState<LuckyDrawConfig>({ allowRepeats: false });
-  
+
   const audioContextRef = useRef<AudioContext | null>(null);
 
   // Sound effect generator using Web Audio API
@@ -28,7 +29,7 @@ export const LuckyDraw: React.FC<LuckyDrawProps> = ({ people }) => {
     osc.type = 'sine';
     osc.frequency.setValueAtTime(800, ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.1);
-    
+
     gainNode.gain.setValueAtTime(0.05, ctx.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
 
@@ -43,7 +44,7 @@ export const LuckyDraw: React.FC<LuckyDrawProps> = ({ people }) => {
     const ctx = audioContextRef.current;
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
-    
+
     osc.type = 'triangle';
     // Simple arpeggio
     osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
@@ -61,27 +62,24 @@ export const LuckyDraw: React.FC<LuckyDrawProps> = ({ people }) => {
   };
 
   const triggerConfetti = () => {
-    const confetti = (window as any).confetti;
-    if (typeof confetti === 'function') {
-      const duration = 3000;
-      const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+    const duration = 3000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-      const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+    const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
-      const interval: any = setInterval(function() {
-        const timeLeft = animationEnd - Date.now();
+    const interval: any = setInterval(function () {
+      const timeLeft = animationEnd - Date.now();
 
-        if (timeLeft <= 0) {
-          return clearInterval(interval);
-        }
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
 
-        const particleCount = 50 * (timeLeft / duration);
-        // since particles fall down, start a bit higher than random
-        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-      }, 250);
-    }
+      const particleCount = 50 * (timeLeft / duration);
+      // since particles fall down, start a bit higher than random
+      confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+      confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+    }, 250);
   };
 
   const startDraw = () => {
@@ -108,9 +106,9 @@ export const LuckyDraw: React.FC<LuckyDrawProps> = ({ people }) => {
       const randomPerson = pool[Math.floor(Math.random() * pool.length)];
       setDisplayValue(randomPerson.name);
       playTickSound();
-      
+
       counter++;
-      
+
       if (counter < totalSpins) {
         // Slow down exponentially
         if (counter > totalSpins - 10) {
@@ -150,9 +148,9 @@ export const LuckyDraw: React.FC<LuckyDrawProps> = ({ people }) => {
           幸运抽奖
         </h2>
         <div className="flex items-center space-x-2">
-           <label className="flex items-center cursor-pointer relative">
-            <input 
-              type="checkbox" 
+          <label className="flex items-center cursor-pointer relative">
+            <input
+              type="checkbox"
               checked={config.allowRepeats}
               onChange={(e) => setConfig({ ...config, allowRepeats: e.target.checked })}
               className="sr-only peer"
@@ -169,12 +167,12 @@ export const LuckyDraw: React.FC<LuckyDrawProps> = ({ people }) => {
           relative w-full max-w-md h-32 bg-gray-900 rounded-xl overflow-hidden shadow-inner border-4 border-gray-800 flex items-center justify-center
           ${isSpinning ? 'ring-4 ring-pink-400 ring-opacity-50' : ''}
         `}>
-           <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent pointer-events-none z-10"></div>
-           <div className="text-4xl md:text-5xl font-black text-white tracking-wider z-0 transition-transform duration-75">
-             {displayValue}
-           </div>
-           {/* Decorative shine */}
-           <div className="absolute top-0 right-0 w-full h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent pointer-events-none z-10"></div>
+          <div className="text-4xl md:text-5xl font-black text-white tracking-wider z-0 transition-transform duration-75">
+            {displayValue}
+          </div>
+          {/* Decorative shine */}
+          <div className="absolute top-0 right-0 w-full h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
         </div>
 
         {/* Start Button */}
@@ -183,8 +181,8 @@ export const LuckyDraw: React.FC<LuckyDrawProps> = ({ people }) => {
           disabled={isSpinning || people.length === 0}
           className={`
             mt-8 px-12 py-4 rounded-full font-bold text-lg shadow-lg transform transition-all active:scale-95
-            ${isSpinning 
-              ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+            ${isSpinning
+              ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
               : 'bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:shadow-xl hover:-translate-y-1'
             }
           `}
